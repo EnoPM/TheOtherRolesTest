@@ -339,6 +339,8 @@ namespace TheOtherRoles.Patches {
             timerUpdate();
             // Mini
             miniUpdate();
+            // Viewer
+            Viewer.UpdateArrows();
 
             // Deputy Sabotage, Use and Vent Button Disabling
             updateReportButton(__instance);

@@ -435,7 +435,8 @@ namespace TheOtherRoles.Patches {
                 RoleId.Vip,
                 RoleId.Invert,
                 RoleId.Chameleon,
-                RoleId.Shifter
+                RoleId.Shifter,
+                RoleId.Viewer,
             });
 
             if (rnd.Next(1, 101) <= CustomOptionHolder.modifierLover.getSelection() * 10) { // Assign lover
@@ -557,7 +558,17 @@ namespace TheOtherRoles.Patches {
             byte playerId;
 
             List<PlayerControl> crewPlayer = new List<PlayerControl>(playerList);
+            List<PlayerControl> neutralPlayer = new List<PlayerControl>(playerList);
             crewPlayer.RemoveAll(x => x.Data.Role.IsImpostor || RoleInfo.getRoleInfoForPlayer(x).Any(r => r.isNeutral));
+            neutralPlayer.RemoveAll(x => !RoleInfo.getRoleInfoForPlayer(x).Any(r => r.isNeutral));
+            if (modifiers.Contains(RoleId.Viewer))
+            {
+                var neutralPlayerViewer = new List<PlayerControl>(neutralPlayer);
+                playerId = setModifierToRandomPlayer((byte)RoleId.Viewer, neutralPlayerViewer);
+                neutralPlayer.RemoveAll(x => x.PlayerId == playerId);
+                playerList.RemoveAll(x => x.PlayerId == playerId);
+                modifiers.RemoveAll(x => x == RoleId.Viewer);
+            }
             if (modifiers.Contains(RoleId.Shifter)) {
                 var crewPlayerShifter = new List<PlayerControl>(crewPlayer);
                 crewPlayerShifter.RemoveAll(x => x == Spy.spy);
@@ -623,6 +634,8 @@ namespace TheOtherRoles.Patches {
                     break;
                 case RoleId.Shifter:
                     selection = CustomOptionHolder.modifierShifter.getSelection(); break;
+                case RoleId.Viewer:
+                    selection = CustomOptionHolder.modifierViewer.getSelection(); break;
             }
                  
             return selection;

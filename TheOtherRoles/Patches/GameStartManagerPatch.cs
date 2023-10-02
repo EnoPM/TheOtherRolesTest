@@ -48,7 +48,9 @@ namespace TheOtherRoles.Patches {
             private static bool update = false;
             private static string currentText = "";
         
-            public static void Prefix(GameStartManager __instance) {
+            public static void Prefix(GameStartManager __instance)
+            {
+                __instance.MinPlayers = 1;
                 if (!GameData.Instance ) return; // No instance
                 update = GameData.Instance.PlayerCount != __instance.LastPlayerCount;
             }

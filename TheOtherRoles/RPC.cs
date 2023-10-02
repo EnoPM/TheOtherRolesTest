@@ -76,7 +76,8 @@ namespace TheOtherRoles
         Vip,
         Invert,
         Chameleon,
-        Shifter
+        Shifter,
+        Viewer
     }
 
     enum CustomRPC
@@ -280,6 +281,9 @@ namespace TheOtherRoles
                     case RoleId.Shifter:
                         Shifter.shifter = player;
                         break;
+                    case RoleId.Viewer:
+                        Viewer.viewer = player;
+                        break;
                     case RoleId.Swapper:
                         Swapper.swapper = player;
                         break;
@@ -411,6 +415,9 @@ namespace TheOtherRoles
                     break;
                 case RoleId.Shifter:
                     Shifter.shifter = player;
+                    break;
+                case RoleId.Viewer:
+                    Viewer.viewer = player;
                     break;
             }
         }
@@ -703,6 +710,7 @@ namespace TheOtherRoles
             if (player == TimeMaster.timeMaster) TimeMaster.clearAndReload();
             if (player == Medic.medic) Medic.clearAndReload();
             if (player == Shifter.shifter) Shifter.clearAndReload();
+            if (player == Viewer.viewer) Viewer.clearAndReload();
             if (player == Seer.seer) Seer.clearAndReload();
             if (player == Hacker.hacker) Hacker.clearAndReload();
             if (player == Tracker.tracker) Tracker.clearAndReload();

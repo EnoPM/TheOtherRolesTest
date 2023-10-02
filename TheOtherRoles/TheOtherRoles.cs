@@ -33,6 +33,7 @@ namespace TheOtherRoles
             TimeMaster.clearAndReload();
             Medic.clearAndReload();
             Shifter.clearAndReload();
+            Viewer.clearAndReload();
             Swapper.clearAndReload();
             Lovers.clearAndReload();
             Seer.clearAndReload();
@@ -2031,6 +2032,49 @@ namespace TheOtherRoles
             shifter = null;
             currentTarget = null;
             futureShift = null;
+        }
+    }
+
+    public static class Viewer
+    {
+        public static PlayerControl viewer;
+        public static readonly Dictionary<byte, Arrow> Arrows = new();
+        
+        public static void clearAndReload() {
+            viewer = null;
+            foreach (var a in Arrows)
+            {
+                if (!a.Value.arrow) continue;
+                UnityEngine.Object.Destroy(a.Value.arrow);
+            }
+            Arrows.Clear();
+        }
+
+        public static void UpdateArrows()
+        {
+            if (viewer != CachedPlayer.LocalPlayer.PlayerControl) return;
+            var localPlayerId = CachedPlayer.LocalPlayer.PlayerId;
+            var remainingKeys = Arrows.Keys.ToList();
+            foreach (var p in CachedPlayer.AllPlayers)
+            {
+                if (p.Data == null || !p.PlayerControl || p.Data.IsDead || p.PlayerId == localPlayerId) continue;
+                remainingKeys.Remove(p.PlayerId);
+                if (!Arrows.TryGetValue(p.PlayerId, out var arrow))
+                {
+                    arrow = Arrows[p.PlayerId] = new Arrow(Color.white);
+                }
+                arrow.Update(p.PlayerControl.transform.position, Color.white);
+                arrow.arrow.SetActive(AmongUsClient.Instance.IsGameStarted && !MeetingHud.Instance);
+            }
+
+            foreach (var k in remainingKeys)
+            {
+                if (Arrows[k].arrow)
+                {
+                    UnityEngine.Object.Destroy(Arrows[k].arrow);
+                }
+                Arrows.Remove(k);
+            }
         }
     }
 }

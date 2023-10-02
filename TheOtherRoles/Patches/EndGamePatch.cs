@@ -372,7 +372,6 @@ namespace TheOtherRoles.Patches {
     class CheckEndCriteriaPatch {
         public static bool Prefix(ShipStatus __instance)
         {
-            return false;
             if (!GameData.Instance) return false;
             if (DestroyableSingleton<TutorialManager>.InstanceExists) // InstanceExists | Don't check Custom Criteria when in Tutorial
                 return true;

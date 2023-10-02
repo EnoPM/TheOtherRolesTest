@@ -50,7 +50,6 @@ namespace TheOtherRoles.Patches {
         
             public static void Prefix(GameStartManager __instance)
             {
-                __instance.MinPlayers = 1;
                 if (!GameData.Instance ) return; // No instance
                 update = GameData.Instance.PlayerCount != __instance.LastPlayerCount;
             }

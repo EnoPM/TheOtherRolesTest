@@ -24,6 +24,13 @@ namespace TheOtherRoles.Patches {
         private static PlayerVoteArea swapped1 = null;
         private static PlayerVoteArea swapped2 = null;
 
+        [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start))]
+        [HarmonyPostfix]
+        private static void StatPostfix()
+        {
+            Viewer.ToggleArrowMode();
+        }
+
         [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.CheckForEndVoting))]
         class MeetingCalculateVotesPatch {
             private static Dictionary<byte, int> CalculateVotes(MeetingHud __instance) {

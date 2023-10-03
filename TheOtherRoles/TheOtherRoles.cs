@@ -2039,15 +2039,22 @@ namespace TheOtherRoles
     {
         public static PlayerControl viewer;
         public static readonly Dictionary<byte, Arrow> Arrows = new();
+        private static bool _revealImpostors;
         
         public static void clearAndReload() {
             viewer = null;
+            _revealImpostors = false;
             foreach (var a in Arrows)
             {
                 if (!a.Value.arrow) continue;
                 UnityEngine.Object.Destroy(a.Value.arrow);
             }
             Arrows.Clear();
+        }
+
+        public static void ToggleArrowMode()
+        {
+            _revealImpostors = !_revealImpostors;
         }
 
         public static void UpdateArrows()
@@ -2063,8 +2070,13 @@ namespace TheOtherRoles
                 {
                     arrow = Arrows[p.PlayerId] = new Arrow(Color.white);
                 }
-                arrow.Update(p.PlayerControl.transform.position, Color.white);
-                arrow.arrow.SetActive(AmongUsClient.Instance.IsGameStarted && !MeetingHud.Instance);
+
+                var isActive = AmongUsClient.Instance.IsGameStarted && !MeetingHud.Instance && ((_revealImpostors && p.Data.Role.IsImpostor) || !_revealImpostors);
+                arrow.arrow.SetActive(isActive);
+                if (isActive)
+                {
+                    arrow.Update(p.PlayerControl.transform.position, _revealImpostors ? Palette.ImpostorRed : Color.white);
+                }
             }
 
             foreach (var k in remainingKeys)

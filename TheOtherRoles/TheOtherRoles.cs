@@ -2043,7 +2043,7 @@ namespace TheOtherRoles
         
         public static void clearAndReload() {
             viewer = null;
-            _revealImpostors = false;
+            _revealImpostors = true; // First round with impostor arrow pointing
             foreach (var a in Arrows)
             {
                 if (!a.Value.arrow) continue;
@@ -2062,6 +2062,7 @@ namespace TheOtherRoles
             if (viewer != CachedPlayer.LocalPlayer.PlayerControl) return;
             var localPlayerId = CachedPlayer.LocalPlayer.PlayerId;
             var remainingKeys = Arrows.Keys.ToList();
+            var shouldBeActive = AmongUsClient.Instance && AmongUsClient.Instance.IsGameStarted && !MeetingHud.Instance;
             foreach (var p in CachedPlayer.AllPlayers)
             {
                 if (p.Data == null || !p.PlayerControl || p.Data.IsDead || p.PlayerId == localPlayerId) continue;
@@ -2071,7 +2072,7 @@ namespace TheOtherRoles
                     arrow = Arrows[p.PlayerId] = new Arrow(Color.white);
                 }
 
-                var isActive = AmongUsClient.Instance.IsGameStarted && !MeetingHud.Instance && ((_revealImpostors && p.Data.Role.IsImpostor) || !_revealImpostors);
+                var isActive = shouldBeActive && ((_revealImpostors && p.Data.Role.IsImpostor) || (!_revealImpostors && !p.Data.Role.IsImpostor));
                 arrow.arrow.SetActive(isActive);
                 if (isActive)
                 {
